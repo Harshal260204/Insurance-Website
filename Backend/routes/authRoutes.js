@@ -37,6 +37,7 @@ router.post("/register", async (req, res) => {
 });
 
 // ✅ Login User (return JWT token)
+// ✅ Login User (return JWT token)
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -44,7 +45,13 @@ router.post("/login", async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await bcrypt.compare(password, user.password))) {
-            res.json({ message: "User Logged In" });
+            res.json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin,
+                token: generateToken(user._id), // ✅ Generate and return JWT token
+            });
         } else {
             res.status(401).json({ message: "Invalid email or password" });
         }
@@ -52,6 +59,7 @@ router.post("/login", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 // ✅ Logout User
 router.post("/logout", (req, res) => {
