@@ -1,6 +1,8 @@
 import express from "express";
 import Policy from "../models/policyModel.js";
 import { protect } from "../middleware/authMiddleware.js";
+import generatePDF from "../utils/pdfGenerator.js";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -25,7 +27,6 @@ router.post("/", protect, async (req, res) => {
 
         await policy.save();
         res.status(201).json({ message: "Policy created successfully", policy });
-
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -68,7 +69,6 @@ router.put("/:id", protect, async (req, res) => {
         }
 
         res.json({ message: "Policy updated successfully", updatedPolicy });
-
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -88,7 +88,57 @@ router.delete("/:id", protect, async (req, res) => {
 
         await policy.deleteOne();
         res.json({ message: "Policy deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
+// ✅ Apply for a Policy (User receives a bill in PDF)
+router.post("/apply", protect, async (req, res) => {
+    try {
+        const { policyName, policyAmount } = req.body;
+
+        if (!policyName || !policyAmount) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const policyNumber = `POL-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+        const newPolicy = await Policy.create({
+            user: req.user._id,
+            policyName,
+            policyAmount,
+            policyNumber,
+        });
+
+        const pdfPath = await generatePDF(newPolicy);
+
+        res.status(201).json({
+            message: "Policy Applied Successfully!",
+            policy: newPolicy,
+            pdfDownloadLink: pdfPath,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// ✅ Admin Report: Generate PDF of all sold policies
+router.get("/report", protect, async (req, res) => {
+    try {
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Access Denied! Admin Only" });
+        }
+
+        const policies = await Policy.find().populate("user", "name email");
+
+        if (!policies.length) {
+            return res.status(404).json({ message: "No policies found!" });
+        }
+
+        const pdfPath = await generatePDF({ type: "report", policies });
+
+        res.json({ message: "Report Generated Successfully!", pdfDownloadLink: pdfPath });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

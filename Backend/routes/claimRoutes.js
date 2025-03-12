@@ -26,7 +26,7 @@ router.post("/", protect, async (req, res) => {
     });
 
     await claim.save();
-    res.status(201).json({ message: "Claim submitted successfully", claim });
+    res.status(201).json({ message: "Claim submitted successfully"});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
