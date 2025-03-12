@@ -5,8 +5,10 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import insuranceRoutes from './routes/insuranceRoutes.js'
+import policyRoutes from './routes/policyRoutes.js'
+import claimRoutes from "./routes/claimRoutes.js";
 import path from "path";
-import { fileURLToPath } from "url"; // ✅ Import this properly
+import { fileURLToPath } from "url";
 
 dotenv.config();
 connectDB();
@@ -20,8 +22,14 @@ app.use(express.json());
 // Routes 
 app.use("/api/auth", authRoutes);
 
+// Insurance Routes
 app.use("/api/insurance", insuranceRoutes);
 
+// Policy Routes 
+app.use("/api/policies", policyRoutes)
+
+// Claim Routes
+app.use("/api/claims", claimRoutes);
 
 // Manually define __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
