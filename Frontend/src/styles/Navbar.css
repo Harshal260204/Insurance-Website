@@ -1,0 +1,56 @@
+/* Custom Navbar Styling */
+.custom-navbar {
+    background-color: #007bff; /* Primary Blue */
+    padding: 12px 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo */
+.navbar-brand {
+    font-size: 1.6rem;
+    color: white !important;
+}
+
+.brand-text {
+    color: white !important;
+}
+
+/* Navbar Links */
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #28a745 !important; /* Green Accent */
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #28a745 !important; /* Accent Green */
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #218838 !important;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+}
+
+.btn-danger:hover {
+    background-color: #c82333 !important;
+}
+
+/* Mobile Menu */
+.navbar-toggler {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,1)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
